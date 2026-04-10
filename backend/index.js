@@ -23,8 +23,7 @@ redisClient.connect();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true,
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type']
 }));
