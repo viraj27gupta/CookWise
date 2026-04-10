@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: cookwise-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: cookwise
+
+  redis:
+    image: redis:7-alpine
+    container_name: cookwise-redis
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    container_name: cookwise-backend
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      - PORT=5001
+      - MONGODB_URI=mongodb://mongodb:27017/cookwise
+      - REDIS_URL=redis://redis:6379
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend
+    container_name: cookwise-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mongodb_data:
