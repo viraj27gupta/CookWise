@@ -7,7 +7,7 @@ async function generateRecipe(ingredients, preferences = {}, isRecipeSearch = fa
   try {
     const model = genAI.getGenerativeModel({
       model: 'gemini-flash-latest',
-      generationConfig: { temperature: 0.9 } // Higher temperature = more creative
+      generationConfig: { temperature: 1.0 } // Max creativity for variety
     });
 
     // Add randomness to force different recipes each time
@@ -59,10 +59,10 @@ async function generateRecipe(ingredients, preferences = {}, isRecipeSearch = fa
         ${cuisineInfo} using ONLY these ingredients: ${ingredients.join(', ')}.
 
         CRITICAL CONSTRAINTS:
-        - Use ONLY the ingredients provided above (and basic pantry items: oil, salt, pepper, water, butter)
-        - Do NOT add any other ingredients
+        - Start with the provided ingredients as the BASE
+        - You MUST add appropriate spices and seasonings for this cuisine (e.g., for Indian: cumin, coriander, turmeric, garam masala, cardamom, cinnamon, cloves, bay leaves, ginger, garlic, chili etc.)
         - Some ingredients may include quantities. Use these exact amounts.
-        - If you cannot make a good recipe with these ingredients, do your best
+        - Create a FULL, AUTHENTIC recipe with all necessary ingredients for the cuisine
 
         Style: ${randomStyle}
         Random seed: ${randomSeed}

@@ -79,29 +79,8 @@ function App() {
 
   const handleShowAdjustMode = () => {
     if (recipe) {
-      // Get original input ingredients (lowercase for comparison)
-      const originalIngs = ingredients.split(',').map(i => i.trim().toLowerCase());
-
-      // Get basic pantry items
-      const basicItems = ['oil', 'salt', 'pepper', 'water', 'butter'];
-
-      // Find recipe ingredients that match original or basic items
-      const locked = recipe.ingredients.filter(recipeIng => {
-        const recipeIngLower = recipeIng.toLowerCase();
-
-        // Check if it's a basic item
-        const isBasic = basicItems.some(item => recipeIngLower.includes(item));
-
-        // Check if it's an original ingredient (flexible matching)
-        const isOriginal = originalIngs.some(orig =>
-          recipeIngLower.includes(orig) || orig.includes(recipeIngLower.split(' ')[0])
-        );
-
-        return isBasic || isOriginal;
-      });
-
-      setSelectedIngredients(locked);
-      setLockedIngredients(locked);
+      setSelectedIngredients([]);
+      setLockedIngredients([]);
       setShowAdjustMode(true);
     }
   };
@@ -262,18 +241,16 @@ function App() {
                 <p>Select the ingredients you have, then regenerate the recipe</p>
                 <div className="ingredients-checklist">
                   {recipe.ingredients.map((ingredient, idx) => {
-                    const isLocked = lockedIngredients.includes(ingredient);
                     const isSelected = selectedIngredients.includes(ingredient);
 
                     return (
                       <label
                         key={idx}
-                        className={`checkbox-item ${isLocked ? 'locked' : ''} ${isSelected ? 'selected' : ''}`}
+                        className={`checkbox-item ${isSelected ? 'selected' : ''}`}
                       >
                         <input
                           type="checkbox"
                           checked={isSelected}
-                          disabled={isLocked}
                           onChange={(e) => {
                             if (e.target.checked) {
                               setSelectedIngredients([...selectedIngredients, ingredient]);
@@ -284,7 +261,6 @@ function App() {
                         />
                         <span>
                           {ingredient}
-                          {isLocked && <span className="lock-badge">✓ Fixed</span>}
                         </span>
                       </label>
                     );
